@@ -1,0 +1,23 @@
+mysql_root_password: 
+mysql_database: 
+mysql_user: 
+mysql_mmuser_password: 
+team_name: 
+team_display_name: 
+admin_username: 
+admin_email: 
+admin_password: 
+myuser_username: 
+myuser_email: 
+myuser_password: 
+channel_name: 
+channel_display_name: 
+mm_site_url: 
+mm_feedback_name: 
+mm_feedback_email: 
+smtp_username: 
+smtp_password: 
+smtp_server: 
+smtp_port: 465
+connection_security: TLS
+

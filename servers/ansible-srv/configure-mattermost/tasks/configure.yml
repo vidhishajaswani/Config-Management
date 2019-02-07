@@ -1,0 +1,93 @@
+---
+ # Check if team exists. If does not exist, create one. Else, skip.
+ - name: List team
+   command: ./mattermost team list
+   args:
+     chdir: /opt/mattermost/bin
+   register: teams
+
+ - name: Create team
+   command: ./mattermost team create --name {{ team_name }} --display_name {{ team_display_name }}
+   args:
+     chdir: /opt/mattermost/bin
+   when: 'team_name not in teams.stdout and team_name not in teams.stderr'
+
+ # Check if admin user exists. If does not exist, create one. Else, skip.
+ - name: Check admin users
+   command: ./mattermost user search {{ admin_username }}
+   args:
+     chdir: /opt/mattermost/bin
+   register: users
+
+ - name: Create admin user
+   command: ./mattermost user create --system_admin --email {{ admin_email }} --username {{ admin_username }} --password {{ admin_password }}
+   args:
+     chdir: /opt/mattermost/bin
+   when: 'admin_email not in users.stdout and admin_email not in users.stderr'
+
+ # Check if user exists. If does not exist, create one. Else, skip.
+ - name: Check users
+   command: ./mattermost user search {{ myuser_username }}
+   args:
+     chdir: /opt/mattermost/bin
+   register: myuser_reg
+
+ - name: Create user
+   command: ./mattermost user create --email {{ myuser_email }} --username {{ myuser_username }} --password {{ myuser_password }}
+   args:
+     chdir: /opt/mattermost/bin
+   when: 'myuser_email not in myuser_reg.stdout and myuser_email not in myuser_reg.stderr'
+
+ # Add user to team
+ - name: Add user to the team
+   command: ./mattermost team add {{ team_name }} {{ myuser_username }} username
+   args:
+     chdir: /opt/mattermost/bin
+
+ # Check if channel exists. If does not exist, create one. Else, skip.
+ - name: Check channels in the team
+   command: ./mattermost channel list {{ team_name }}
+   args:
+     chdir: /opt/mattermost/bin
+   register: channels
+
+ - name: Add channel to the team
+   command: ./mattermost channel create --team {{ team_name }} --name {{ channel_name }} --display_name {{ channel_display_name }}
+   args: 
+     chdir: /opt/mattermost/bin
+   when: 'channel_name not in channels.stdout and channel_name not in channels.stderr'
+
+ # Updates for Notifications
+ - name: Updates for Notifications
+   command: "{{ item }}"
+   args:
+     chdir: /opt/mattermost/bin
+   with_items:
+     - ./mattermost config set ServiceSettings.SiteURL {{ mm_site_url }}
+     - ./mattermost config set EmailSettings.SendEmailNotifications "true"
+     - ./mattermost config set EmailSettings.FeedbackName {{ mm_feedback_name }}
+     - ./mattermost config set EmailSettings.FeedbackEmail {{ mm_feedback_email }}
+     - ./mattermost config set EmailSettings.SMTPUsername {{ smtp_username }}
+     - ./mattermost config set EmailSettings.SMTPPassword {{ smtp_password }}
+     - ./mattermost config set EmailSettings.SMTPServer {{ smtp_server }}
+     - ./mattermost config set EmailSettings.SMTPPort {{ smtp_port }}
+     - ./mattermost config set EmailSettings.ConnectionSecurity {{ connection_security }}
+     - ./mattermost config set EmailSettings.EnableSMTPAuth "true"
+     
+ 
+
+
+
+
+
+   
+
+
+
+  
+   
+
+ 
+
+
+

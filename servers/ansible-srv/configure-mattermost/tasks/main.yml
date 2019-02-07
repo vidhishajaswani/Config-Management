@@ -1,0 +1,5 @@
+---
+- include: update.yml
+- include: mysql.yml
+- include: mattermost.yml
+- include: configure.yml

@@ -1,0 +1,58 @@
+---
+ # Download, extract mattermost
+ - name: Download and extract mattermost
+   unarchive:
+     src: https://releases.mattermost.com/5.7.1/mattermost-5.7.1-linux-amd64.tar.gz
+     dest: /opt
+     remote_src: yes
+
+ - name: Create Storage directory for files
+   file:
+     path: /opt/mattermost/data
+     state: directory
+
+ # Create mattermost group and user, grant permissions
+ - name: Ensire group 'mattermost' exists
+   group:
+     name: mattermost
+     state: present
+
+ - name: Create user 'mattermost' to group 'mattermost'
+   user:
+     name: mattermost
+     group: mattermost
+
+ - name: Set user and group 'mattermost' as owner of Mattermost files
+   file: 
+     path: /opt/mattermost
+     owner: mattermost
+     group: mattermost
+     recurse: yes
+     mode: "g+w"
+
+ # Update config.json
+ - name: Update config.json
+   lineinfile: 
+     dest: /opt/mattermost/config/config.json
+     regexp: '"DataSource":'
+     line: '        "DataSource": "mmuser:{{ mysql_mmuser_password }}@tcp(127.0.0.1:3306)/mattermost?charset=utf8mb4,utf8&readTimeout=30s&writeTimeout=30s",
+'
+     backrefs: yes
+
+ # Setup mattermost to use systemd for starting and stopping
+ - name: Setup mattermost to use systemd for starting and stopping
+   template: 
+     src: templates/mattermost.service.j2
+     dest: /lib/systemd/system/mattermost.service
+
+ # Reload new unit, restart, and enable at startup
+ - name: Make systemd load new unit
+   systemd:
+     daemon-reload: yes
+
+ - name: Start the service
+   systemd:
+     name: mattermost.service
+     state: started
+     enabled: yes
+
