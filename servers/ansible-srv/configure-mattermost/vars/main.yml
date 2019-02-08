@@ -1,19 +1,20 @@
+# Please update your passwords/email address and add smtp account details.
 mysql_root_password: 
-mysql_database: 
-mysql_user: 
+mysql_database: mattermost
+mysql_user: mmuser
 mysql_mmuser_password: 
-team_name: 
-team_display_name: 
+team_name: devops
+team_display_name: DevOps Team
 admin_username: 
 admin_email: 
 admin_password: 
 myuser_username: 
 myuser_email: 
 myuser_password: 
-channel_name: 
-channel_display_name: 
-mm_site_url: 
-mm_feedback_name: 
+channel_name: general
+channel_display_name: DevOps Channel
+mm_site_url: http://devops-mattermost.com
+mm_feedback_name: No-Reply
 mm_feedback_email: 
 smtp_username: 
 smtp_password: 
