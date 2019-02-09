@@ -64,7 +64,7 @@ ansible-playbook -i inventory site.yml
 ![mattermost](images/mattermost.png)
 
 ## Screencast
-[Screencast Link](https://www.youtube.com/watch?v=qgCHpPNDpGo&feature=youtu.be)
+[Screencast Link](https://youtu.be/qgCHpPNDpGo)
 
 
 ## References
